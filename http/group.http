@@ -1,0 +1,11 @@
+GET  http://localhost:3000/api/groups
+
+https://chatgpt.com/share/0786ca7f-33fe-4554-9ee4-0bd713b9e6b8
+
+###
+GET /api/groups?page=1&pageSize=10&sortBy=latest&keyword=example&isPublic=true
+//그룹 목록 조회 URl
+
+###
+POST /api/posts
+Content-Type: :application/json

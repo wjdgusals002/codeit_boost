@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//그룹 데이터베이스 테이블
+model Group {
+  id           Int      @id @default(autoincrement())
+  name         String
+  password     String
+  imageUrl     String?
+  isPublic     Boolean
+  introduction String
+  likeCount    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  badges       GroupBadge[] // String 배열을 사용하여 배지들을 저장
+  postCount    Int      @default(0)
+
+  Post Post[]
+}
+
+//게시글 데이터베이스
+model Post {
+  id          Int      @id @default(autoincrement())
+  nickname    String
+  title       String
+  content     String
+  postPassword String
+  imageUrl    String
+  tags        String[]
+  location    String?
+  moment      DateTime
+  isPublic    Boolean
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  group       Group    @relation(fields: [groupId], references: [id])
+  groupId     Int
+
+  Comment Comment[] //댓글 db와 관계 설정
+}
+
+//댓글 데이터베이스
+model Comment {
+    commentId        Int      @id @default(autoincrement())
+    postId    Int
+    nickname  String
+    content   String
+    password  String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    // 관계 설정 (예: 게시글과 댓글의 관계 설정)
+    post      Post     @relation(fields: [postId], references: [id])
+}
+
+//뱃지 모델
+model Badge{
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  createdAt DateTime @default(now())
+  groups GroupBadge[]
+}
+
+model GroupBadge{
+  id Int @id @default(autoincrement())
+  groupId Int
+  bageId Int
+  acquiredAt DateTime @default(now())
+  group Group @relation(fields: [groupId],references: [id])
+  badge Badge @relation(fields: [bageId],references: [id])
+}
+
+
+
