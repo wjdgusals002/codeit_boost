@@ -2,38 +2,44 @@
 import prisma from "../prismaClient.js";
 
 class PostRepository{
-    //게시글 등록
-    async createPost(data){
+    // 특정 그룹에 게시글 등록
+    async createPost(postData) {
         return prisma.post.create({
-            data,
+            data: postData,
         });
     }
 
-    async countPosts(filters){
-        return prisma.post.count({where: filters});
+    async countPosts(filters) {
+        console.log('Counting posts with filters:', filters);
+        return prisma.post.count({ where: filters });
     }
-
-    async findPosts({where, orderBy, skip, take}){
+    
+    async findPosts({ where, orderBy, skip, take }) {
+        console.log('Finding posts with filters:', { where, orderBy, skip, take });
         return prisma.post.findMany({
-            where,
+            where:{
+                groupId:15, //직접 그룹 아이디를 입력해서 확인
+            },
             orderBy,
             skip,
             take,
-            select:{
-                id:true,
-                nickname:true,
-                title:true,
-                imageUrl:true,
-                tags:true,
-                location:true,
-                moment:true,
-                isPublic:true,
+            select: {
+                id: true,
+                nickname: true,
+                title: true,
+                imageUrl: true,
+                tags: true,
+                location: true,
+                moment: true,
+                isPublic: true,
                 likeCount: true,
-                commentCount:true,
-                createdAt:true
+                commentCount: true,
+                createdAt: true,
             }
         });
     }
+    
+
     
     //게시글 조회, 게시글 상세 조회, 게시글 권한 조회
     async findPostById(postId){

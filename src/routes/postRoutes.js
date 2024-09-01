@@ -5,10 +5,10 @@ import postController from '../controllers/postController.js';
 const router = express.Router({mergeParams:true});
 
 //특정 그룹에 게시글 등록
-router.post('/',postController.createPost);
+router.post('/groups/:groupid/posts',postController.createPost);
 
 //특정 그룹의 게시글 목록 조회
-router.get('/', postController.getPostByGroupId);
+router.get('/groups/:groupid/posts', postController.getPostsByGroupId);
 
 //특정 게시글 수정
 router.put('/:postId',postController.updatePost);

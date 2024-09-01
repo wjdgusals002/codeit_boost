@@ -2,60 +2,74 @@
 //그룹 비밀번호를 확인하고 사용자가 해당 그룹에 게시글을 작성할 권한이 있는지 확인
 import postRepository from '../repositories/postRepository.js';
 import groupRepository from '../repositories/groupRepository.js';
+import bcrypt from'bcryptjs';
 
 class PostService{
-    async createPost(postData){
-        const {groupId,groupPassword, ...postDetails}= postData;
+    // 게시글 등록
+    async createPost(postData) {
+        const { groupId, groupPassword, ...postDetails } = postData;
+        const groupIdInt = parseInt(groupId, 10);
 
-        //그룹 비밀번호 확인
-        const group = await groupRepository.getGroupById(groupId);
-        if(!group){
-            throw{status:404,message:'그룹을 찾을 수 없습니다.'};
-        }
-        if(group.password !== groupPassword){
-            throw{status:403,message:'그룹 비밀번호가 틀렸습니다.'};
+        // 그룹 비밀번호 확인
+        const group = await groupRepository.getGroupById(groupIdInt);
+        if (!group) {
+            throw { status: 404, message: '그룹을 찾을 수 없습니다.' };
         }
 
-        //게시글 등록
-        const post = await postRepository.createPost({
+        // 비밀번호 검증
+        const isPasswordValid = await bcrypt.compare(groupPassword, group.password);
+        if (!isPasswordValid) {
+            throw { status: 403, message: '그룹 비밀번호가 틀렸습니다.' };
+        }
+
+        // 게시글 등록
+        return postRepository.createPost({
             ...postDetails,
-            groupId:group.id,
+            groupId: groupIdInt,
         });
-
-        return post;
     }
-
-    //게시물 목록 조회
-    async getPostsByGroupId({groupId,page,pageSize,sortBy,keyword,isPublic}){
-        const filters ={
-            groupId :parseInt(groupId,10),
-            isPublic:isPublic !==undefined ? isPublic:undefined,
-            OR: keyword ? [{title:{contains:keyword}},{tags:{has:keyword}}]: undefined
+    // 게시물 목록 조회
+    async getPostsByGroupId({ groupId, page, pageSize, sortBy, keyword, isPublic }) {
+        const filters = {
+            groupId: parseInt(groupId, 10),
+            isPublic: isPublic !== undefined ? isPublic : undefined,
+            OR: keyword ? [
+                { title: { contains: keyword, mode: 'insensitive' } },
+                { tags: { has: keyword } }
+            ] : undefined,
         };
-
-        const sortOptions={
-            latest:{createdAt:'desc'},
-            mostCommented:{commentCount:'desc'},
-            mostLiked:{likeCount:'desc'}
+    
+        const sortOptions = {
+            latest: { createdAt: 'desc' },
+            mostCommented: { commentCount: 'desc' },
+            mostLiked: { likeCount: 'desc' },
         };
-
-        const [totalItemCount,data]= await Promise.all([
+    
+        console.log('Filters:', filters);
+        console.log('Sort Options:', sortOptions[sortBy] || sortOptions.latest);
+    
+        const [totalItemCount, data] = await Promise.all([
             postRepository.countPosts(filters),
             postRepository.findPosts({
-                where:filters,
-                orderBy:sortOptions[sortBy] ||sortOptions.latest,
-                skip:(page-1)*pageSize,
-                take:pageSize
-            })
+                where: filters,
+                orderBy: sortOptions[sortBy] || sortOptions.latest,
+                skip: (page - 1) * pageSize,
+                take: pageSize,
+            }),
         ]);
-
-        return{
-            currentPage:page,
-            totalPages: Math.ceil(totalItemCount/pageSize),
+    
+        console.log('Total Item Count:', totalItemCount);
+        console.log('Data:', data);
+    
+        return {
+            currentPage: page,
+            totalPages: Math.ceil(totalItemCount / pageSize),
             totalItemCount,
-            data
+            data,
         };
     }
+    
+
 
     //게시글 수정
     async updatePost(post,postPassword,updateData){

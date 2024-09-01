@@ -27,8 +27,7 @@ model Group {
   updatedAt    DateTime @updatedAt
   badges       GroupBadge[] // String 배열을 사용하여 배지들을 저장
   postCount    Int      @default(0)
-
-  Post Post[]
+  posts Post[]
 }
 
 //게시글 데이터베이스
@@ -43,6 +42,8 @@ model Post {
   location    String?
   moment      DateTime
   isPublic    Boolean
+  likeCount    Int      @default(0)
+  commentCount Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   group       Group    @relation(fields: [groupId], references: [id])

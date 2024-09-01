@@ -107,7 +107,6 @@ class GroupRepository {
             },
         });
     }
-    // src/repositories/groupRepository.js
 
     // 그룹 공개여부 확인
     async getGroupById(id) {
@@ -115,6 +114,13 @@ class GroupRepository {
             where: { id: parseInt(id, 10) }, // ID를 정수로 변환
         });
     }
+
+    async getGroupById(id) {
+        return prisma.group.findUnique({
+            where: { id: id },
+        });
+    }
+    
 
 }
 

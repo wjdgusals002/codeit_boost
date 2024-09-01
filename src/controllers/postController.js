@@ -2,37 +2,62 @@
 import postService from "../services/postService.js";
 
 class PostController{
-    //게시글 등록
-    async createPost(req,res){
-        try{
-            const postData=req.body;
-            const newPost= await postService.createPost(postData);
+    // 게시글 등록
+    async createPost(req, res) {
+        try {
+            const { groupid } = req.params; // URL 파라미터에서 groupId를 읽음
+            const { groupPassword,moment, ...postDetails } = req.body;
+
+            const momentDate = new Date(moment).toISOString();
+
+            if (!groupid || !groupPassword) {
+                return res.status(400).json({ message: '필수 정보가 누락되었습니다.' });
+            }
+
+            // 게시글 데이터에 groupId와 groupPassword 추가
+            const postData = {
+                ...postDetails,
+                groupId: parseInt(groupid, 10),
+                groupPassword,
+                moment:momentDate,
+            };
+
+            const newPost = await postService.createPost(postData);
             res.status(201).json(newPost);
-        }catch(error){
-            res.status(error.status ||500).json({message:error.message ||'서버 오류가 발생했습니다.'});
+        } catch (error) {
+            res.status(error.status || 500).json({ message: error.message || '서버 오류가 발생했습니다.' });
         }
     }
 
-    //게시물 목록 조회
-    async getPostByGroupId(req,res){
-        try{
-            const {groupId}=req.params;
-            const {page=1,pageSize=10,sortBy='latest',keyword='',isPublic}=req.query;
 
-            const posts = await postService.getPostByGroupId({
-                groupId,
-                page:parseInt(page,10),
-                pageSize:parseInt(pageSize,10),
+
+    // 게시물 목록 조회
+    async getPostsByGroupId(req, res) {
+        try {
+            const { groupid } = req.params; // 그룹 아이디
+            const { page = 1, pageSize = 10, sortBy = 'latest', keyword = '', isPublic } = req.query; // 쿼리 파라미터
+    
+            console.log('Parameters:', { groupid, page, pageSize, sortBy, keyword, isPublic });
+    
+            const posts = await postService.getPostsByGroupId({
+                groupId: groupid,
+                page: parseInt(page, 10),
+                pageSize: parseInt(pageSize, 10),
                 sortBy,
                 keyword,
-                isPublic:isPublic ==='true',
+                isPublic: isPublic === 'true',
             });
-
+    
+            console.log('Posts:', posts);
+    
             res.status(200).json(posts);
-        }catch(error){
-            res.status(error.status ||500).json({message:error.message||'서버 오류가 발생했습니다.'})
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(error.status || 500).json({ message: error.message || '서버 오류가 발생했습니다.' });
         }
     }
+    
+
     //게시글 수정 
     async updatePost(req,res){
         try{
