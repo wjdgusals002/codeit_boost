@@ -9,3 +9,11 @@ GET /api/groups?page=1&pageSize=10&sortBy=latest&keyword=example&isPublic=true
 ###
 POST /api/posts
 Content-Type: :application/json
+
+{
+	"name": "확인용",
+	"password": "1234",
+	"imageUrl": "string",
+	"isPublic": true,
+	"introduction": "그룹 수정 삭제"
+}

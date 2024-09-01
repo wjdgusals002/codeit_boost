@@ -11,24 +11,43 @@ class GroupRepository {
     }
 
     //그룹 조회(ID로 조회)
-    async getGroupById(id){
-        return prisma.group.findUnique({where: {id}});
+    async getGroupById(groupId){
+        return prisma.group.findUnique({
+            where: {groupId},
+            include: {badges:true},
+        });
     }
 
     //그룹 수정
-    async updateGroup(id,data){
-        return prisma.group.update({
-            where:{id},
-            data,
+    async updateGroup(id, data) {
+        try {
+            const groupId = parseInt(id, 10); // ID를 정수로 변환
+            if (isNaN(groupId)) {
+                throw new Error('유효하지 않은 그룹 ID입니다.');
+            }
+    
+            return prisma.group.update({
+                where: { id: groupId },
+                data,
+            });
+        } catch (error) {
+            console.error('Repository updateGroup error:', error); // 로그 추가
+            throw error;
+        }
+    }
+    
+
+    // 그룹 삭제
+    async deleteGroup(id) {
+        if (!Number.isInteger(id)) {
+            throw new Error('ID must be an integer');
+        }
+
+        return prisma.group.delete({
+            where: { id },
         });
     }
 
-    //그룹 삭제
-    async deleteGroup(id){
-        return prisma.group.delete({
-            where: {id},
-        });
-    }
 
     //그룹 공감 수 증가
     async incrementLikeCount(id){
@@ -39,43 +58,63 @@ class GroupRepository {
     }
     
     //그룹 목록 조회
-    //prisma를 사용해서 그룹 목록 조회
+    // Prisma를 사용해서 그룹 목록 조회
     async getGroups({
-        page =1,
-        pageSize =10,
-        sortBy ='latest',
+        page = 1,
+        pageSize = 10,
+        sortBy = 'latest',
         keyword = '',
         isPublic = null,
-    }){
+    }) {
         const sortOptions = {
-            latest: {createdAt: 'desc'},
-            mostPosted :{postCount:'desc'},
-            mostLiked:{likeCount:'desc'},
-            mostBadge:{badgeCount:'desc'},
+            latest: { createdAt: 'desc' },
+            mostPosted: { postCount: 'desc' },
+            mostLiked: { likeCount: 'desc' },
+            mostBadge: { badges: { _count: 'desc' } },
         };
 
-        const whereConditions ={
-            ...(keyword && {name: {contains:keyword,mode:'insensitive'}}),
-            ...(isPublic !==null && {isPublic}),
+        const whereConditions = {
+            ...(keyword && { name: { contains: keyword, mode: 'insensitive' } }),
+            ...(isPublic !== null && { isPublic }),
         };
 
-        const groups =await prisma.group.findMany({
+        const groups = await prisma.group.findMany({
             where: whereConditions,
-            orderBy:sortOptions[sortBy]||sortOptions.latest,
-            skip:(page-1)*pageSize,
+            orderBy: sortOptions[sortBy] || sortOptions.latest,
+            skip: (page - 1) * pageSize,
             take: pageSize,
+            include: {
+                badges: true,  // badges 필드를 포함하여 조회
+            },
         });
 
-        const totalCount = await prisma.group.count({
-            where:whereConditions,
+        const totalItemCount = await prisma.group.count({
+            where: whereConditions,
         });
-        
+
         return {
-            totalItemCount,
-            data:groups,
+            totalItemCount,  // 총 그룹 수
+            data: groups,
         };
     }
 
+    // 그룹 상세 조회
+    async getGroupById(id) {
+        return prisma.group.findUnique({
+            where: { id },
+            include: {
+                badges: true,  // badges 필드를 포함하여 조회
+            },
+        });
+    }
+    // src/repositories/groupRepository.js
+
+    // 그룹 공개여부 확인
+    async getGroupById(id) {
+        return prisma.group.findUnique({
+            where: { id: parseInt(id, 10) }, // ID를 정수로 변환
+        });
+    }
 
 }
 

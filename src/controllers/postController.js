@@ -42,7 +42,7 @@ class PostController{
             const updatedPost = await postService.updatePost(postId, postPassword,updateData);
             res.status(200).json(updatedPost);
         }catch(error){
-            res.status(error.status||500).json({message: errpr.message||'서버 오류가 발생했습니다'});
+            res.status(error.status||500).json({message: error.message||'서버 오류가 발생했습니다'});
         }
     }
 
