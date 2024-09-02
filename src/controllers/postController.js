@@ -11,7 +11,7 @@ class PostController{
             const momentDate = new Date(moment).toISOString();
 
             if (!groupid || !groupPassword) {
-                return res.status(400).json({ message: '필수 정보가 누락되었습니다.' });
+                return res.status(400).json({ message: '잘못된 요청입니다' });
             }
 
             // 게시글 데이터에 groupId와 groupPassword 추가
@@ -102,10 +102,10 @@ class PostController{
             const updatedPost = await postService.incrementLikeCount(postId);
     
             if (!updatedPost) {
-                return res.status(404).json({ message: 'Post not found' });
+                return res.status(404).json({ message: '존재하지 않습니다.' });
             }
     
-            res.status(200).json({ message: 'Like count incremented successfully', updatedPost });
+            res.status(200).json({ message: '게시글 공감하기 성공'});
         } catch (error) {
             res.status(error.status || 500).json({ message: error.message || 'Server error occurred' });
         }

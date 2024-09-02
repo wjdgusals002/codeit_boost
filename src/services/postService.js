@@ -3,6 +3,7 @@
 import postRepository from '../repositories/postRepository.js';
 import groupRepository from '../repositories/groupRepository.js';
 import bcrypt from 'bcryptjs';
+import prisma from '../prismaClient.js';
 
 class PostService{
     // 게시글 등록
@@ -140,7 +141,7 @@ class PostService{
             data: { likeCount: { increment: 1 } },
             select: {
                 id: true,
-                likeCount: true,  // Ensure likeCount is included in the response
+                likeCount: true,  
             },
         });
     
