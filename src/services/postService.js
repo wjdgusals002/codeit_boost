@@ -29,6 +29,7 @@ class PostService{
             groupId: groupIdInt,
         });
     }
+    
     // 게시물 목록 조회
     async getPostsByGroupId({ groupId, page, pageSize, sortBy, keyword, isPublic }) {
         const filters = {
@@ -149,24 +150,19 @@ class PostService{
     }
 
     //게시물 권한 조회
-    async verifyPostPassword(postId,inPutPassword){
-        const post = await postRepository.findPostById(postId);
+    async verifyPostPassword(postId,inputPassword){
+        const postPasswordData = await postRepository.findPostPasswordById(postId);
 
-        if(!post){
+        if(!postPasswordData){
             throw{status:404,message:'존재하지 않는 게시물입니다'};
         }
         
-        const isPasswordCorrect=post.password ===inPutPassword;
+        const isPasswordCorrect = postPasswordData.postPassword === inputPassword; //해시화 하지 않고 평문 비밀번호로 비교
         return isPasswordCorrect;
     }
-
-    
-    
-    
-
     //게시글 공개 여부 확인
     async isPublic(postId){
-        const post = await postRepository.findPostById(postId);
+        const post = await postRepository.verifyPostIsPublic(postId);
 
         if(!post){
             return null;

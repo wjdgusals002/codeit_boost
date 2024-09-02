@@ -1,6 +1,7 @@
 //게시글 관련 로직 컨트롤러
 import postService from "../services/postService.js";
 
+
 class PostController{
     // 게시글 등록
     async createPost(req, res) {
@@ -115,9 +116,9 @@ class PostController{
     async verifyPostPassword(req,res){
         try{
             const{postId}=req.params;
-            const {password}=req.body;
+            const {postPassword}=req.body;
 
-            const isPasswordCorrect = await postService.verifyPostPassword(postId,password);
+            const isPasswordCorrect = await postService.verifyPostPassword(postId,postPassword);
 
             if(isPasswordCorrect){
                 res.status(200).json({message:'비밀번호가 확인되었습니다.'});
