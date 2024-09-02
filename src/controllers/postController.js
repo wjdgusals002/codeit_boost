@@ -5,7 +5,7 @@ class PostController{
     // 게시글 등록
     async createPost(req, res) {
         try {
-            const { groupid } = req.params; // URL 파라미터에서 groupId를 읽음
+            const { groupid } = req.params; // URL 파라미터에서 groupid를 읽음
             const { groupPassword,moment, ...postDetails } = req.body;
 
             const momentDate = new Date(moment).toISOString();
