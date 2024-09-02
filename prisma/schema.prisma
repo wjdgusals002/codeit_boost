@@ -49,7 +49,7 @@ model Post {
   group       Group    @relation(fields: [groupId], references: [id])
   groupId     Int
 
-  Comment Comment[] //댓글 db와 관계 설정
+  comments Comment[] //댓글 db와 관계 설정
 }
 
 //댓글 데이터베이스

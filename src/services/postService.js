@@ -2,7 +2,7 @@
 //그룹 비밀번호를 확인하고 사용자가 해당 그룹에 게시글을 작성할 권한이 있는지 확인
 import postRepository from '../repositories/postRepository.js';
 import groupRepository from '../repositories/groupRepository.js';
-import bcrypt from'bcryptjs';
+import bcrypt from 'bcryptjs';
 
 class PostService{
     // 게시글 등록
@@ -72,14 +72,14 @@ class PostService{
 
 
     //게시글 수정
-    async updatePost(post,postPassword,updateData){
-        const posts= await postRepository.findPostById(postId);
+    async updatePost(postId,postPassword,updateData){
+        const post= await postRepository.findPostById(postId);
 
         if(!post){
             throw{status:404,message:'존재하지 않는 게시글입니다.'};
         }
 
-        if(post.password !== postPassword){
+        if(post.postPassword !== postPassword){
             throw{status:403,message:'비밀번호가 일치하지 않습니다.'};
         }
         return await postRepository.updatePost(postId,updateData);
@@ -96,20 +96,22 @@ class PostService{
         if(post.postPassword !== postPassword){
             throw {status:403, message:'비밀번호가 일치하지 않습니다.'}
         }
+
+        await postRepository.deletePost(postId);
     }
 
     //게시글 상세 정보 조회
-    async getPostDetails(postId){
+    async getPostDetails(postId) {
         const post = await postRepository.findPostById(postId);
-
-        if(!post){
-            throw{status:404, message:'존재하지 않는 게시글입니다.'};
+    
+        if (!post) {
+            throw { status: 404, message: '존재하지 않는 게시글입니다.' };
         }
-
-        //상세 정보 반환
-        return{
-            id:post.id,
-            groupId:post.groupId,
+    
+        // 상세 정보 반환
+        return {
+            id: post.id,
+            groupId: post.groupId,
             nickname: post.nickname,
             title: post.title,
             content: post.content,
@@ -119,9 +121,30 @@ class PostService{
             moment: post.moment,
             isPublic: post.isPublic,
             likeCount: post.likeCount,
-            commentCount: post.commentCount,
+            commentCount: post.commentCount  ,
             createdAt: post.createdAt,
         };
+    }
+    
+    //게시물 공감하기
+    async incrementLikeCount(postId) {
+        const post = await postRepository.findPostById(postId);
+    
+        if (!post) {
+            return null; // 게시글이 없다면 null을 반환
+        }
+    
+        // 게시물 좋아요 수 증가시키기
+        const updatedPost = await prisma.post.update({
+            where: { id: parseInt(postId, 10) },
+            data: { likeCount: { increment: 1 } },
+            select: {
+                id: true,
+                likeCount: true,  // Ensure likeCount is included in the response
+            },
+        });
+    
+        return updatedPost;
     }
 
     //게시물 권한 조회
@@ -136,19 +159,9 @@ class PostService{
         return isPasswordCorrect;
     }
 
-    //게시물 공감하기
-    async liekPost(postId){
-        const post= await postRepository.findPostById(postId);
-
-        if(!post){
-            return null;
-        }//게시글이 없다면 null을 반환
-
-        //게시물 좋아요 수 증가 시키기
-        const updatedPost = await postRepository.incrementLikeCount(postId);
-
-        return updatedPost;
-    }
+    
+    
+    
 
     //게시글 공개 여부 확인
     async isPublic(postId){

@@ -64,7 +64,7 @@ class PostController{
             const {postId}= req.params;
             const{postPassword, ...updateData}= req.body;
 
-            const updatedPost = await postService.updatePost(postId, postPassword,updateData);
+            const updatedPost = await postService.updatePost(parseInt(postId,10), postPassword,updateData);
             res.status(200).json(updatedPost);
         }catch(error){
             res.status(error.status||500).json({message: error.message||'서버 오류가 발생했습니다'});
@@ -95,6 +95,22 @@ class PostController{
         }
     }
 
+    // 공감 증가
+    async incrementLike(req, res) {
+        try {
+            const { postId } = req.params;
+            const updatedPost = await postService.incrementLikeCount(postId);
+    
+            if (!updatedPost) {
+                return res.status(404).json({ message: 'Post not found' });
+            }
+    
+            res.status(200).json({ message: 'Like count incremented successfully', updatedPost });
+        } catch (error) {
+            res.status(error.status || 500).json({ message: error.message || 'Server error occurred' });
+        }
+    }
+
     //게시글 조회 권한 확인
     async verifyPostPassword(req,res){
         try{
@@ -113,23 +129,8 @@ class PostController{
         }
     }
 
-    //게시물 공감하기
-    async likePost(req,res){
-        const {postId}= req.params;
+    
 
-        try{
-            const post = await postService.likePost(postId);
-
-            if(!post){
-                return res.status(404).json({message:'존재하지 않습니다.'});
-            }
-
-            return res.status(200).json({message:'게시물 공감하기 성공'});
-        }catch(error){
-            console.error(error);
-            return res.status(500).json({message:'서버 오류입니다.'})
-        }
-    }
 
     //게시글 공개 여부 확인
     async isPublic(req,res){
