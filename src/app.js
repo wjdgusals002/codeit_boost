@@ -6,9 +6,13 @@ import groupRoutes from './routes/groupRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
 import badgeRoutes from './routes/badgeRoutes.js';
+import cors from 'cors';
 
 const app= express();
 app.use(express.json());
+app.use(cors({
+    origin: 'https://project-zogakzip-fe.vercel.app'
+    }));
 
 app.use('/api',groupRoutes);
 app.use('/api',postRoutes);
