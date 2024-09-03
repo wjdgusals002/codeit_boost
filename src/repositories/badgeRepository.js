@@ -12,7 +12,7 @@ class badgeReopistory{
             where:{id:badgeId},
         });
     }
-
+///테스트 
     //새로운 배지 생성
     async creatBadge(data){
         return prisma.badge.create({
