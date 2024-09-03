@@ -11,6 +11,6 @@ router.put('/comments/:commentId',commentController.updateComment);
 //댓글 삭제
 router.delete('/comments/:commentId',commentController.deleteComment);
 //댓글 목록 조회
-router.get('/post/:postId/comments',commentController.getComments);
+router.get('/posts/:postId/comments',commentController.getComments);
 
 export default router;
