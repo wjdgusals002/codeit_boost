@@ -9,10 +9,14 @@ import badgeRoutes from './routes/badgeRoutes.js';
 import cors from 'cors';
 
 const app= express();
-app.use(express.json());
+
 app.use(cors({
-    origin: 'https://project-zogakzip-fe.vercel.app'
+    origin: 'https://project-zogakzip-fe.vercel.app',
+    methods: 'GET,POST,PUT,DELETE', // 허용할 HTTP 메소드
+    allowedHeaders: 'Content-Type,Authorization' // 허용할 헤더
     }));
+app.use(express.json());
+
 
 app.use('/api',groupRoutes);
 app.use('/api',postRoutes);
