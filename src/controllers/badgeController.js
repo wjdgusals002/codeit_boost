@@ -1,4 +1,3 @@
-//http 요청 처리
 import badgeService from "../services/badgeService.js";
 
 class badgeController{

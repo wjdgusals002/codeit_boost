@@ -22,6 +22,11 @@ app.use(express.json());
 // 정적 파일 제공을 위한 미들웨어 추가
 app.use('/uploads', express.static('src/uploads'));
 
+app.get('/', (req, res) => {
+    res.send('Welcome to the server!');
+  });
+   
+
 
 app.use('/api',groupRoutes);
 app.use('/api',postRoutes);

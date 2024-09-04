@@ -1,5 +1,3 @@
-
-
 const imageController = {
     async uploadImage(req, res) {
         try {

@@ -1,7 +1,5 @@
 //게시글 관련 로직 컨트롤러
 import postService from "../services/postService.js";
-import imageService from "../services/imageService.js";
-
 
 class PostController{
     // 게시글 등록
