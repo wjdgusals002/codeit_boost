@@ -1,5 +1,6 @@
 //게시글 관련 로직 컨트롤러
 import postService from "../services/postService.js";
+import imageService from "../services/imageService.js";
 
 
 class PostController{
@@ -152,5 +153,6 @@ class PostController{
             return res.status(500).json({message:'서버 오류입니다.'});
         }
     }
+    
 }
 export default new PostController();

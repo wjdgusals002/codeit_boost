@@ -22,4 +22,5 @@ router.post('/groups/:groupid/verify-password', groupController.verifyPassword);
 //그룹 공개 여부 확인
 router.get('/groups/:groupid/is-public',groupController.isPublic)
 
+
 export default router;

@@ -2,6 +2,7 @@
 import express from 'express';
 import postController from '../controllers/postController.js';
 
+
 const router = express.Router({mergeParams:true});
 
 //특정 그룹에 게시글 등록
@@ -27,5 +28,6 @@ router.post('/posts/:postId/verify-password',postController.verifyPostPassword);
 
 //게시글 공개 여부 확인하기
 router.get('/posts/:postId/is-public',postController.isPublic);
+
 
 export default router;

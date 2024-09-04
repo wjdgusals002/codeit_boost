@@ -3,6 +3,7 @@
 //클라이언트 요청을 처리
 // src/controllers/groupController.js
 import groupService from '../services/groupService.js';
+import imageService from '../services/imageService.js';
 
 class GroupController {
     //그룹 생성
@@ -162,6 +163,8 @@ class GroupController {
             res.status(500).json({message:'서버 오류가 발생했습니다.'})
         }
     }
+
 }
+
 
 export default new GroupController();
