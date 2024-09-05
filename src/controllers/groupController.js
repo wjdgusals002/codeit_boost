@@ -12,6 +12,7 @@ class GroupController {
             const newGroup = await groupService.createGroup(req.body);
             res.status(201).json(newGroup);
         } catch (error) {
+            console.error(error.message);
             res.status(500).json({ error: 'Failed to create group' });
         }
     }
