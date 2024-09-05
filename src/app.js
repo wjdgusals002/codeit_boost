@@ -35,7 +35,7 @@ app.use('/api',commentRoutes);
 app.use('/api',badgeRoutes);
 app.use('/api/image',imageRoutes);
 
-const PORT= process.env.PORT ||10000;
+const PORT= process.env.PORT ||3000;
 app.listen(PORT, ()=>{
     console.log(`server running on port ${PORT}`);
 });
