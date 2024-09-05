@@ -12,9 +12,10 @@ import cors from 'cors';
 const app= express();
 
 app.use(cors({
-    origin: 'https://project-zogakzip-fe.vercel.app',
+    origin: '*',
     methods: 'GET,POST,PUT,DELETE', // 허용할 HTTP 메소드
-    allowedHeaders: 'Content-Type,Authorization' // 허용할 헤더
+    allowedHeaders: 'Content-Type,Authorization', // 허용할 헤더
+    credentials: true,
     }));
 
 app.use(express.json());
@@ -34,7 +35,7 @@ app.use('/api',commentRoutes);
 app.use('/api',badgeRoutes);
 app.use('/api/image',imageRoutes);
 
-const PORT= process.env.PORT;
+const PORT= process.env.PORT ||10000;
 app.listen(PORT, ()=>{
     console.log(`server running on port ${PORT}`);
 });
