@@ -12,7 +12,7 @@ import cors from 'cors';
 const app= express();
 
 app.use(cors({
-    origin: '*',
+    origin: 'https://project-zogakzip-fe.vercel.app/?baseUrl=',
     methods: 'GET,POST,PUT,DELETE', // 허용할 HTTP 메소드
     allowedHeaders: 'Content-Type,Authorization', // 허용할 헤더
     credentials: true,
