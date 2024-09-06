@@ -14,7 +14,7 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-    origin: 'https://project-zogakzip-fe.vercel.app',
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 };
@@ -40,7 +40,7 @@ app.use('/api', commentRoutes);
 app.use('/api', badgeRoutes);
 app.use('/api/image', imageRoutes);
 
-app.all('/', (req, res) => {
+app.get('/', (req, res) => {
     console.log('Request received:', req.method, req.url);
     res.send('Welcome to the server!');
 });
