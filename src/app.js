@@ -39,11 +39,11 @@ app.use((req, res, next) => {
 app.use('/uploads', express.static('src/uploads'));
 
 
-app.use('/api', groupRoutes);
-app.use('/api', postRoutes);
-app.use('/api', commentRoutes);
-app.use('/api', badgeRoutes);
-app.use('/api/image', imageRoutes);
+app.use('/', groupRoutes);
+app.use('/', postRoutes);
+app.use('/', commentRoutes);
+app.use('/', badgeRoutes);
+app.use('/image', imageRoutes);
 
 app.get('/', (req, res) => {
     try {
@@ -67,7 +67,7 @@ app.use((req, res, next) => {
     res.send('File uploaded successfully');
   });
 
-const PORT = parseInt(process.env.PORT, 10) || 3000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
