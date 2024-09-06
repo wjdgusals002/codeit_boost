@@ -1,7 +1,7 @@
 //요청 URL과 HTTP메소드를 컨트롤러의 특정 메소드와 연결
 // src/routes/groupRoutes.js
 import express from 'express';
-const multer = require('multer');
+import multer from 'multer';
 import groupController from '../controllers/groupController.js';
 
 const router = express.Router();
