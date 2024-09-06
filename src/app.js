@@ -11,10 +11,10 @@ import cors from 'cors';
 
 const app= express();
 
-app.use(cors({
-    origin: '*',
-    }));
-
+const corsOptions ={
+    origin: 'https://project-zogakzip-fe.vercel.app',
+}
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // 정적 파일 제공을 위한 미들웨어 추가
