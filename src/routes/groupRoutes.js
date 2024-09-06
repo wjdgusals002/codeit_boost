@@ -1,12 +1,14 @@
 //요청 URL과 HTTP메소드를 컨트롤러의 특정 메소드와 연결
 // src/routes/groupRoutes.js
 import express from 'express';
+const multer = require('multer');
 import groupController from '../controllers/groupController.js';
 
 const router = express.Router();
+const upload = multer({ dest: 'uploads/' });
 
 //그룹 등록
-router.post('/groups', groupController.createGroup);
+router.post('/groups',upload.single('file'),groupController.createGroup);
 //그룹 목록 조회
 router.get('/groups',groupController.getGroups);
 //그룹 수정
