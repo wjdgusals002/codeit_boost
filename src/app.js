@@ -44,6 +44,12 @@ app.use('/api', commentRoutes);
 app.use('/api', badgeRoutes);
 app.use('/api/image', imageRoutes);
 
+//서버 연결 확인
+app.use((req, res, next) => {
+    console.log(`Received ${req.method} request for ${req.url}`);
+    next();
+  });
+
 const PORT = parseInt(process.env.PORT, 10) || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
