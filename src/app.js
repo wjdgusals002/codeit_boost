@@ -33,16 +33,17 @@ app.use((req, res, next) => {
 // 정적 파일 제공을 위한 미들웨어 추가
 app.use('/uploads', express.static('src/uploads'));
 
-app.get('/', (req, res) => {
-    console.log('Request received:', req.method, req.url);
-    res.send('Welcome to the server!');
-});
 
 app.use('/api', groupRoutes);
 app.use('/api', postRoutes);
 app.use('/api', commentRoutes);
 app.use('/api', badgeRoutes);
 app.use('/api/image', imageRoutes);
+
+app.all('/', (req, res) => {
+    console.log('Request received:', req.method, req.url);
+    res.send('Welcome to the server!');
+});
 
 //서버 연결 확인
 app.use((req, res, next) => {
