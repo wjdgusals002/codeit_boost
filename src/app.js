@@ -23,6 +23,7 @@ const corsOptions ={
 app.use(cors(corsOptions));
 app.use(express.json());
 
+
 // 정적 파일 제공을 위한 미들웨어 추가
 app.use('/uploads', express.static('src/uploads'));
 
@@ -38,7 +39,7 @@ app.use('/api',commentRoutes);
 app.use('/api',badgeRoutes);
 app.use('/api/image',imageRoutes);
 
-const PORT = process.env.PORT||3000;
+const PORT = parseInt(process.env.PORT,10)||3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
