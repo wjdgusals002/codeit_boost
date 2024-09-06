@@ -13,6 +13,8 @@ const app= express();
 
 const corsOptions ={
     origin: 'https://project-zogakzip-fe.vercel.app',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
 }
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -32,7 +34,7 @@ app.use('/api',commentRoutes);
 app.use('/api',badgeRoutes);
 app.use('/api/image',imageRoutes);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT||3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
