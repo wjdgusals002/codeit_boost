@@ -21,6 +21,7 @@ const corsOptions = {
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
+    allowedHeaders: 'Content-Type,Authorization',
 };
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -45,9 +46,14 @@ app.use('/api', badgeRoutes);
 app.use('/api/image', imageRoutes);
 
 app.get('/', (req, res) => {
-    console.log('Request received:', req.method, req.url);
-    res.send('Welcome to the server!');
-});
+    try {
+      // 정상적인 요청 처리 로직
+      res.send('Hello, world!');
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
 
 //서버 연결 확인
 app.use((req, res, next) => {
