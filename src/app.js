@@ -8,10 +8,14 @@ import badgeRoutes from './routes/badgeRoutes.js';
 import imageRoutes from './routes/imageRoutes.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import multer from 'multer';
 
 dotenv.config();
 
 const app = express();
+
+const upload= multer({dest:'src/uploads'});
+
 
 const corsOptions = {
     origin: '*',
@@ -49,6 +53,12 @@ app.get('/', (req, res) => {
 app.use((req, res, next) => {
     console.log(`Received ${req.method} request for ${req.url}`);
     next();
+  });
+
+  app.post('/image', upload.single('file'), (req, res) => {
+    console.log(req.file); // 업로드된 파일 정보
+    console.log(req.body); // 기타 폼 데이터
+    res.send('File uploaded successfully');
   });
 
 const PORT = parseInt(process.env.PORT, 10) || 3000;

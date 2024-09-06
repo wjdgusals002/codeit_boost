@@ -1,12 +1,19 @@
 //게시글 관련 라우트
 import express from 'express';
 import postController from '../controllers/postController.js';
+import multer from 'multer';
 
 
 const router = express.Router({mergeParams:true});
 
+// multer 설정
+const upload = multer({ dest: 'uploads/' });
+
+// 특정 그룹에 게시글 등록 (파일 업로드 포함)
+router.post('/groups/:groupid/posts', upload.single('file'), postController.createPost);
+
 //특정 그룹에 게시글 등록
-router.post('/groups/:groupid/posts',postController.createPost);
+// router.post('/groups/:groupid/posts',postController.createPost);
 
 //특정 그룹의 게시글 목록 조회
 router.get('/groups/:groupid/posts', postController.getPostsByGroupId);
