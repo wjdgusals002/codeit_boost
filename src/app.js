@@ -8,6 +8,7 @@ import commentRoutes from './routes/commentRoutes.js';
 import badgeRoutes from './routes/badgeRoutes.js';
 import imageRoutes from './routes/imageRoutes.js';
 import cors from 'cors';
+import dotenv from 'dotenv';
 
 
 dotenv.config();
