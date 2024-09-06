@@ -9,6 +9,9 @@ import badgeRoutes from './routes/badgeRoutes.js';
 import imageRoutes from './routes/imageRoutes.js';
 import cors from 'cors';
 
+
+dotenv.config();
+
 const app= express();
 
 const corsOptions ={
